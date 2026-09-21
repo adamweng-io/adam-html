@@ -1,41 +1,740 @@
-<!-- TODO 1: Create the HTML Boilerplate -->
-
-<!-- TODO 2: Add Your previous projects' HTML into the public folder -->
-
-<!-- TODO 3: Take screenshots of your project previews and add the images to the images folder -->
-
-<!-- TODO 4: Add titles/subtitles etc. -->
-
-<!-- TODO 5: Add a link to the project pages -->
-
-<!-- TODO 6: Add images to show the project previews
-HINT for TODO 6: You can use the height attribute set to 200 to make the image smaller:
-https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-height -->
-
-<!-- TODO 7: Add the Contact Me and About Me page links -->
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adam Portfolio</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Net Calculator v1.4.1</title>
+<meta name="theme-color" content="#0d9488">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="js/tailwind-config.js"></script>
+<script src="js/theme-init.js"></script>
+<link rel="stylesheet" href="css/app.css">
 </head>
-<body>
-    <h1>Adam Weng Portfolio</h1>
-    <h2>I'm a web Developer</h2>
-    <hr>
-    <h3>
-        <a href="./public/movie-ranking.html">Movie Ranking Project</a>
-    </h3>
-    <img src="./assets/images/movie-ranking.png" alt="movie-ranking image" height="200">
-    <h3>
-        <a href="./public/birthday-invite.html">Birthday Invite Project</a>
-    </h3>
-    <img src="./assets/images/birthday-invite.png" alt="birthday-invite image" height="200">
+<body class="h-full bg-stone-100/80 dark:bg-stone-950 text-stone-800 dark:text-stone-100 font-sans antialiased selection:bg-teal-500 selection:text-white flex flex-col overflow-x-hidden">
 
-    <hr>
-    <a href="./public/about.html">About Me</a>
-    <a href="./public/contact.html">Contact Me</a>
+<!-- Top Navigation Bar with Responsive Menu -->
+<header class="sticky top-0 z-40 w-full backdrop-blur-md bg-white/90 dark:bg-stone-900/90 border-b border-stone-200/80 dark:border-stone-800 shadow-sm transition-colors">
+  <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4 min-w-0">
+    <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 overflow-hidden">
+      <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-teal-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-teal-500/20 flex-shrink-0">
+        <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2 2 8v8l10 6 10-6V8z"></path>
+          <path d="M2 8l10 6 10-6M12 14v8" stroke-width="1.4" opacity="0.85"></path>
+        </svg>
+      </div>
+      <div class="min-w-0 flex flex-col justify-center leading-tight">
+        <span class="font-bold text-sm sm:text-base md:text-lg tracking-tight text-stone-900 dark:text-white truncate">Net Calculator</span>
+        <span class="mt-0.5 w-fit text-[8px] sm:text-[9px] font-mono font-semibold px-1.5 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 border border-stone-200 dark:border-stone-700 whitespace-nowrap shadow-sm">v1.4.1</span>
+        <p class="hidden md:block mt-0.5 text-xs text-stone-500 dark:text-stone-400 truncate">Diamond mesh geometry &amp; physical spec calculator</p>
+      </div>
+    </div>
+
+    <!-- App Actions Toolbar with Responsive Menu -->
+    <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0 relative">
+      <!-- Direct Access: History Button -->
+      <button id="btnOpenHistory" type="button" title="View calculation history & past states" class="flex items-center gap-1.5 h-9 sm:h-10 px-2.5 sm:px-3 text-xs sm:text-sm font-semibold rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-700 transition-all active:scale-95 shadow-sm">
+        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span class="hidden sm:inline">History</span>
+        <span id="navHistoryBadge" class="hidden text-[10px] font-mono font-bold px-1.5 py-0.2 rounded-full bg-teal-600 text-white leading-tight">0</span>
+      </button>
+
+      <!-- Desktop direct access buttons (collapsed into hamburger menu on mobile) -->
+      <button id="btnLoadSample" type="button" title="Load sample parameters" class="hidden md:flex items-center gap-1.5 h-9 sm:h-10 px-2.5 sm:px-3 text-xs sm:text-sm font-semibold rounded-xl bg-teal-50 dark:bg-teal-950/50 hover:bg-teal-100 dark:hover:bg-teal-900/40 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 transition-all active:scale-95 shadow-sm">
+        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        <span>Sample</span>
+      </button>
+
+      <button id="btnResetAll" type="button" title="Reset all input fields" class="hidden md:flex items-center gap-1.5 h-9 sm:h-10 px-3 text-xs sm:text-sm font-semibold rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-700 transition-all active:scale-95">
+        <svg class="w-4 h-4 text-stone-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+        <span>Reset</span>
+      </button>
+
+      <!-- Theme Toggle -->
+      <button id="themeToggle" type="button" aria-label="Toggle theme" class="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300 shadow-sm hover:bg-stone-50 dark:hover:bg-stone-750 transition-colors active:scale-95">
+        <svg id="iconSun" class="w-4 h-4 text-amber-500 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+        <svg id="iconMoon" class="w-4 h-4 text-stone-600 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+      </button>
+
+      <!-- Responsive Hamburger / Actions Overflow Menu Button -->
+      <div class="relative">
+        <button id="btnNavMenu" type="button" aria-expanded="false" aria-haspopup="true" aria-label="Open navigation and tools menu" class="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-700 transition-all active:scale-95 shadow-sm">
+          <svg id="iconMenuBars" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+          <svg id="iconMenuClose" class="w-4 h-4 hidden transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu Card -->
+        <div id="navMenuDropdown" class="hidden absolute right-0 top-full mt-2 w-64 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-float py-2 z-50 transition-all duration-150 transform origin-top-right">
+          
+          <div class="px-3 py-1.5 border-b border-stone-100 dark:border-stone-800">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-stone-400">Quick Actions</span>
+          </div>
+
+          <button id="menuItemSample" type="button" class="w-full px-3.5 py-2.5 text-xs font-semibold text-stone-700 dark:text-stone-200 hover:bg-teal-50 dark:hover:bg-teal-950/40 hover:text-teal-700 dark:hover:text-teal-300 flex items-center gap-2.5 transition-colors text-left">
+            <svg class="w-4 h-4 text-teal-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <span>Load Sample Net</span>
+          </button>
+
+          <button id="menuItemReset" type="button" class="w-full px-3.5 py-2.5 text-xs font-semibold text-stone-700 dark:text-stone-200 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:text-rose-600 dark:hover:text-rose-400 flex items-center gap-2.5 transition-colors text-left">
+            <svg class="w-4 h-4 text-stone-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span>Reset All Parameters</span>
+          </button>
+
+          <div class="my-1 border-t border-stone-100 dark:border-stone-800"></div>
+
+          <div class="px-3 py-1.5">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-stone-400">Data &amp; History</span>
+          </div>
+
+          <button id="menuItemHistory" type="button" class="w-full px-3.5 py-2.5 text-xs font-semibold text-stone-700 dark:text-stone-200 hover:bg-stone-50 dark:hover:bg-stone-800 flex items-center justify-between transition-colors text-left">
+            <span class="flex items-center gap-2.5">
+              <svg class="w-4 h-4 text-teal-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span>View History Log</span>
+            </span>
+            <span id="menuHistoryBadge" class="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300">0</span>
+          </button>
+
+          <button id="menuItemExportBackup" type="button" class="w-full px-3.5 py-2.5 text-xs font-semibold text-stone-700 dark:text-stone-200 hover:bg-stone-50 dark:hover:bg-stone-800 flex items-center gap-2.5 transition-colors text-left">
+            <svg class="w-4 h-4 text-teal-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            <span>Export History JSON</span>
+          </button>
+
+          <label for="importHistoryInputMenu" class="w-full px-3.5 py-2.5 text-xs font-semibold text-stone-700 dark:text-stone-200 hover:bg-stone-50 dark:hover:bg-stone-800 flex items-center gap-2.5 transition-colors cursor-pointer text-left">
+            <svg class="w-4 h-4 text-violet-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l4-4m0 0l4 4m-4-4v12"/></svg>
+            <span>Import History File</span>
+            <input id="importHistoryInputMenu" type="file" accept=".json" class="hidden">
+          </label>
+
+          <div class="my-1 border-t border-stone-100 dark:border-stone-800"></div>
+
+          <button id="menuItemFormula" type="button" class="w-full px-3.5 py-2.5 text-xs font-semibold text-stone-700 dark:text-stone-200 hover:bg-stone-50 dark:hover:bg-stone-800 flex items-center gap-2.5 transition-colors text-left">
+            <svg class="w-4 h-4 text-stone-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+            <span>Formulas &amp; Math Guide</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
+
+  <!-- Main Dual-Pane Web App Workspace -->
+  <main class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
+
+    <!-- LEFT PANE: Mesh Controls, Dimensions & Specs -->
+    <div class="lg:col-span-5 space-y-4 sm:space-y-6">
+
+      <!-- Parameters Card -->
+      <section class="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200/90 dark:border-stone-800/90 shadow-card overflow-hidden">
+
+        <div class="p-4 sm:p-5 border-b border-stone-100 dark:border-stone-800/80 bg-stone-50/50 dark:bg-stone-900/50 space-y-3 sm:space-y-4">
+          <div class="flex items-center justify-between gap-2">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-teal-500 ring-4 ring-teal-500/20"></span>
+              Mesh Parameters
+            </h2>
+            <div class="flex items-center gap-1.5">
+              <button id="btnQuickSave" type="button" title="Quick-save current setup to history" class="px-2 py-1 text-[11px] font-semibold rounded-lg bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 hover:bg-teal-100 border border-teal-200/60 dark:border-teal-800/60 transition-all flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                <span>Save</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 p-1 bg-stone-200/70 dark:bg-stone-800 rounded-xl gap-1">
+            <button id="btnModeDim" type="button" class="min-h-[44px] py-2.5 text-xs sm:text-sm font-semibold rounded-lg bg-white dark:bg-stone-900 shadow-sm text-teal-600 dark:text-teal-400 transition-all flex items-center justify-center gap-1.5 px-1">
+              <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+              <span>Dimensions</span>
+            </button>
+            <button id="btnModeHoles" type="button" class="min-h-[44px] py-2.5 text-xs sm:text-sm font-medium rounded-lg text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 transition-all flex items-center justify-center gap-1.5 px-1">
+              <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+              <span>Hole Count</span>
+            </button>
+          </div>
+          <p id="modeHint" class="text-[11px] text-stone-500 dark:text-stone-400 leading-snug px-0.5">You know the number of holes → get the finished net size.</p>
+        </div>
+
+        <div class="p-4 sm:p-6 space-y-4 sm:space-y-5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="measureType" class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1.5">Input measurement</label>
+              <select id="measureType" class="w-full h-11 bg-stone-50 dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-xl px-3 text-sm font-medium outline-none focus:ring-2 focus:ring-teal-500 dark:text-white cursor-pointer transition-colors" title="Choose whether your input is the mesh reference size or the knot-to-knot bar length">
+                <option value="stretch" selected>Mesh size (before stretch)</option>
+                <option value="bar">Bar length (knot to knot)</option>
+              </select>
+              <p class="mt-1.5 text-[11px] text-stone-500 dark:text-stone-400 leading-snug">Use the hole’s reference size before directional reshaping.</p>
+            </div>
+
+            <div>
+              <label id="barLabel" for="bar" class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1.5">Mesh Size</label>
+              <div class="relative flex items-center">
+                <input id="bar" type="number" inputmode="decimal" min="0" step="any" placeholder="0" class="w-full h-11 pl-3 pr-20 bg-stone-50 dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-xl text-sm font-mono font-medium focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all dark:text-white placeholder:text-stone-400" title="Enter the mesh reference size or one bar length">
+                <div class="absolute right-1">
+                  <select id="unit" class="h-9 px-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg text-xs font-semibold text-stone-700 dark:text-stone-300 outline-none cursor-pointer focus:ring-1 focus:ring-teal-500">
+                    <option value="mm">mm</option>
+                    <option value="cm">cm</option>
+                    <option value="m">m</option>
+                    <option value="inch" selected>inch</option>
+                    <option value="ft">ft</option>
+                    <option value="yd">yd</option>
+                  </select>
+                </div>
+              </div>
+              <p id="barHelp" class="mt-1.5 text-[11px] text-stone-500 dark:text-stone-400 leading-snug">Reference size of one mesh opening before directional reshaping.</p>
+            </div>
+          </div>
+
+          <div id="inputModeDim" class="grid grid-cols-2 gap-3 sm:gap-4">
+            <div>
+              <label for="rows" class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1.5">Vertical Holes</label>
+              <div class="relative">
+                <input id="rows" type="number" inputmode="numeric" min="0" step="1" placeholder="0" class="w-full h-11 px-3 bg-stone-50 dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-xl text-sm font-mono font-medium focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all dark:text-white placeholder:text-stone-400" title="Number of whole holes stacked top-to-bottom">
+              </div>
+            </div>
+            <div>
+              <label for="cols" class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1.5">Horizontal Holes</label>
+              <div class="relative">
+                <input id="cols" type="number" inputmode="numeric" min="0" step="1" placeholder="0" class="w-full h-11 px-3 bg-stone-50 dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-xl text-sm font-mono font-medium focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all dark:text-white placeholder:text-stone-400" title="Number of whole holes side-by-side">
+              </div>
+            </div>
+          </div>
+
+          <div id="inputModeHoles" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <div>
+              <label for="targetV" class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1.5">Target Height</label>
+              <div class="relative flex items-center">
+                <input id="targetV" type="number" inputmode="decimal" min="0" step="any" placeholder="0" class="w-full h-11 pl-3 pr-20 bg-stone-50 dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-xl text-sm font-mono font-medium focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all dark:text-white placeholder:text-stone-400">
+                <div class="absolute right-1">
+                  <select id="targetVUnit" class="h-9 px-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg text-xs font-semibold text-stone-700 dark:text-stone-300 outline-none cursor-pointer focus:ring-1 focus:ring-teal-500">
+                    <option value="inch">inch</option>
+                    <option value="ft" selected>ft</option>
+                    <option value="yd">yd</option>
+                    <option value="m">m</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label for="targetH" class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1.5">Target Width</label>
+              <div class="relative flex items-center">
+                <input id="targetH" type="number" inputmode="decimal" min="0" step="any" placeholder="0" class="w-full h-11 pl-3 pr-20 bg-stone-50 dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-xl text-sm font-mono font-medium focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all dark:text-white placeholder:text-stone-400">
+                <div class="absolute right-1">
+                  <select id="targetHUnit" class="h-9 px-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg text-xs font-semibold text-stone-700 dark:text-stone-300 outline-none cursor-pointer focus:ring-1 focus:ring-teal-500">
+                    <option value="inch">inch</option>
+                    <option value="ft" selected>ft</option>
+                    <option value="yd">yd</option>
+                    <option value="m">m</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-stone-200/80 dark:border-stone-800/80 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <div class="min-w-0">
+                <label for="stretchType" class="block text-xs font-bold text-stone-700 dark:text-stone-300">Main stretch direction</label>
+                <p id="stretchHelp" class="text-[11px] text-stone-500 dark:text-stone-400">Most nets are stretched vertically; horizontal is derived automatically.</p>
+              </div>
+              <select id="stretchType" class="h-9 px-2.5 bg-stone-100 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-lg text-xs font-semibold text-stone-700 dark:text-stone-200 outline-none focus:ring-1 focus:ring-teal-500 cursor-pointer flex-shrink-0" title="Choose which direction the mesh is primarily stretched">
+                <option value="v" selected>Vertical (most common)</option>
+                <option value="h">Horizontal</option>
+                <option value="both">Both (independent)</option>
+              </select>
+            </div>
+
+            <div class="p-3.5 bg-stone-50 dark:bg-stone-950/60 rounded-xl border border-stone-200 dark:border-stone-800 space-y-4">
+              <div id="vStretchContainer">
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-xs font-semibold text-stone-600 dark:text-stone-400">Vertical Stretch</span>
+                  <span id="pctV" class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold bg-teal-100 dark:bg-teal-900/60 text-teal-700 dark:text-teal-300">70%</span>
+                </div>
+                <input id="stretchV" type="range" min="0" max="100" step="0.1" value="70">
+              </div>
+
+              <div id="hStretchContainer" class="hidden">
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-xs font-semibold text-stone-600 dark:text-stone-400">Horizontal Stretch</span>
+                  <span id="pctH" class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold bg-violet-100 dark:bg-violet-900/60 text-violet-700 dark:text-violet-300">70%</span>
+                </div>
+                <input id="stretchH" type="range" min="0" max="100" step="0.1" value="70">
+              </div>
+
+              <div id="impliedBarRow" class="hidden pt-1 flex items-center justify-between gap-2 text-[11px]">
+                <span class="text-stone-500 dark:text-stone-400">Implied bar length at these settings</span>
+                <span id="impliedBarValue" class="font-mono font-bold text-amber-600 dark:text-amber-400">—</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Results Metrics Card -->
+      <section class="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200/90 dark:border-stone-800/90 shadow-card overflow-hidden">
+        <div class="p-4 sm:p-5 border-b border-stone-100 dark:border-stone-800/80 bg-stone-50/50 dark:bg-stone-900/50 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h2 id="outputTitle" class="text-sm font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300">Total Net Dimensions</h2>
+          </div>
+
+          <div id="outputUnitWrapper" class="flex items-center gap-2">
+            <span class="text-xs font-medium text-stone-400">Unit:</span>
+            <select id="totalUnit" class="h-9 px-2.5 bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-lg text-xs font-bold text-stone-700 dark:text-stone-200 outline-none cursor-pointer focus:ring-1 focus:ring-emerald-500">
+              <option value="mm">mm</option>
+              <option value="cm">cm</option>
+              <option value="m">m</option>
+              <option value="inch">inch</option>
+              <option value="ft" selected>ft</option>
+              <option value="yd">yd</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="p-4 sm:p-6 space-y-4">
+          <div class="grid grid-cols-2 gap-3 sm:gap-4">
+            <div class="p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-teal-50/80 to-teal-100/30 dark:from-teal-950/40 dark:to-stone-900 border border-teal-100 dark:border-teal-900/40 flex flex-col justify-between min-w-0">
+              <span id="outVLabel" class="text-[11px] font-bold text-teal-600 dark:text-teal-400 uppercase tracking-wider">Vertical Dimension</span>
+              <div id="vertical" class="text-xl sm:text-3xl font-mono font-extrabold text-stone-900 dark:text-white tracking-tight mt-1 truncate">—</div>
+            </div>
+
+            <div class="p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-emerald-50/80 to-emerald-100/30 dark:from-emerald-950/40 dark:to-stone-900 border border-emerald-100 dark:border-emerald-900/40 flex flex-col justify-between min-w-0">
+              <span id="outHLabel" class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Horizontal Dimension</span>
+              <div id="horizontal" class="text-xl sm:text-3xl font-mono font-extrabold text-stone-900 dark:text-white tracking-tight mt-1 truncate">—</div>
+            </div>
+          </div>
+
+          <div class="p-3.5 sm:p-4 rounded-xl bg-stone-50 dark:bg-stone-950/60 border border-stone-200/80 dark:border-stone-800">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-2.5 flex flex-wrap items-center justify-between gap-1">
+              <span>Single Hole Open Size</span>
+              <span class="text-[10px] lowercase font-normal px-2 py-0.5 rounded bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300">stretched aperture</span>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="min-w-0">
+                <div class="text-xs text-stone-500 dark:text-stone-400">Vertical Height</div>
+                <div id="cellV" class="text-sm sm:text-base font-mono font-bold text-stone-800 dark:text-stone-200 truncate">—</div>
+              </div>
+              <div class="min-w-0">
+                <div class="text-xs text-stone-500 dark:text-stone-400">Horizontal Width</div>
+                <div id="cellH" class="text-sm sm:text-base font-mono font-bold text-stone-800 dark:text-stone-200 truncate">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PRIMARY ACTION: Opens Order / Batch Drawer -->
+          <button id="btnOpenActionDrawer" type="button" class="relative w-full flex items-center justify-center gap-2 h-12 px-4 text-sm font-bold rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white shadow-md shadow-teal-700/10 transition-all active:scale-95">
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+            <span>Batch &amp; Export Net</span>
+            <span id="batchCountBadge" class="hidden px-2 py-0.5 text-xs font-mono font-bold rounded-full bg-teal-900/80 text-white border border-teal-300/30">0 saved</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Linear Mass & Weight Card -->
+      <section class="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200/90 dark:border-stone-800/90 shadow-card overflow-hidden">
+        <div class="p-4 sm:p-5 border-b border-stone-100 dark:border-stone-800/80 bg-stone-50/50 dark:bg-stone-900/50 flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
+            </div>
+            <h2 class="text-sm font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300">Weight & Density</h2>
+          </div>
+          <span class="text-xs font-medium text-stone-400 hidden sm:inline">Linear Mass</span>
+        </div>
+
+        <div class="p-4 sm:p-6 space-y-4">
+          <div>
+            <label for="netWeight" class="block text-xs font-semibold text-stone-600 dark:text-stone-400 mb-1.5">Total net weight (optional)</label>
+            <div class="relative flex items-center">
+              <input id="netWeight" type="number" inputmode="decimal" min="0" step="any" placeholder="0" class="w-full h-11 pl-3 pr-20 bg-stone-50 dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-xl text-sm font-mono font-medium focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all dark:text-white placeholder:text-stone-400">
+              <div class="absolute right-1">
+                <select id="netWeightUnit" class="h-9 px-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg text-xs font-semibold text-stone-700 dark:text-stone-300 outline-none cursor-pointer focus:ring-1 focus:ring-amber-500">
+                  <option value="kg" selected>kg</option>
+                  <option value="g">g</option>
+                  <option value="lb">lb</option>
+                  <option value="oz">oz</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 sm:p-4 rounded-xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/70 dark:border-amber-900/40 space-y-3">
+            <div class="min-w-0">
+              <div class="text-[11px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">Weight per unit length</div>
+              <div id="weightPerLength" class="text-lg sm:text-2xl font-mono font-extrabold text-stone-900 dark:text-white mt-1 truncate">—</div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 pt-2 border-t border-amber-200/50 dark:border-amber-900/40">
+              <div>
+                <label for="wplLengthUnit" class="block text-[10px] font-bold uppercase text-stone-500 dark:text-stone-400 mb-1">Per Length</label>
+                <select id="wplLengthUnit" class="w-full h-9 px-2 text-xs font-medium bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 rounded-lg outline-none focus:ring-1 focus:ring-amber-500 dark:text-white cursor-pointer">
+                  <option value="mm">mm</option>
+                  <option value="cm">cm</option>
+                  <option value="m">m</option>
+                  <option value="inch">inch</option>
+                  <option value="ft" selected>ft</option>
+                  <option value="yd">yd</option>
+                </select>
+              </div>
+              <div>
+                <label for="wplWeightUnit" class="block text-[10px] font-bold uppercase text-stone-500 dark:text-stone-400 mb-1">Unit Mass</label>
+                <select id="wplWeightUnit" class="w-full h-9 px-2 text-xs font-medium bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 rounded-lg outline-none focus:ring-1 focus:ring-amber-500 dark:text-white cursor-pointer">
+                  <option value="kg" selected>kg</option>
+                  <option value="g">g</option>
+                  <option value="lb">lb</option>
+                  <option value="oz">oz</option>
+                </select>
+              </div>
+            </div>
+
+            <p class="text-[11px] font-mono text-amber-700/80 dark:text-amber-400/80">Weight ÷ Length = Total Net Weight ÷ Total Horizontal Length</p>
+            <p id="weightBasisNote" class="text-[11px] text-stone-500 dark:text-stone-400">Enter a net weight above to calculate.</p>
+          </div>
+
+          <div class="pt-2 border-t border-stone-200/80 dark:border-stone-800/80 space-y-2">
+            <label for="lengthQuery" class="block text-xs font-semibold text-stone-600 dark:text-stone-400">Estimate weight for a cut length</label>
+            <div class="relative flex items-center">
+              <input id="lengthQuery" type="number" inputmode="decimal" min="0" step="any" placeholder="0" class="w-full h-11 pl-3 pr-20 bg-stone-50 dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-xl text-sm font-mono font-medium focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all dark:text-white placeholder:text-stone-400">
+              <div class="absolute right-1">
+                <select id="lengthQueryUnit" class="h-9 px-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg text-xs font-semibold text-stone-700 dark:text-stone-300 outline-none cursor-pointer focus:ring-1 focus:ring-amber-500">
+                  <option value="mm">mm</option>
+                  <option value="cm">cm</option>
+                  <option value="m">m</option>
+                  <option value="inch">inch</option>
+                  <option value="ft" selected>ft</option>
+                  <option value="yd">yd</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="p-3 bg-stone-50 dark:bg-stone-950/60 rounded-xl border border-stone-200/80 dark:border-stone-800 flex items-center justify-between gap-2">
+              <span class="text-xs font-medium text-stone-500 dark:text-stone-400">Estimated Cut Weight</span>
+              <span id="lengthQueryWeight" class="text-sm sm:text-base font-mono font-bold text-stone-900 dark:text-white">—</span>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-stone-200/80 dark:border-stone-800/80 space-y-2">
+            <label for="weightQuery" class="block text-xs font-semibold text-stone-600 dark:text-stone-400">Estimate length for a given weight</label>
+            <div class="relative flex items-center">
+              <input id="weightQuery" type="number" inputmode="decimal" min="0" step="any" placeholder="0" class="w-full h-11 pl-3 pr-20 bg-stone-50 dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-xl text-sm font-mono font-medium focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all dark:text-white placeholder:text-stone-400">
+              <div class="absolute right-1">
+                <select id="weightQueryUnit" class="h-9 px-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg text-xs font-semibold text-stone-700 dark:text-stone-300 outline-none cursor-pointer focus:ring-1 focus:ring-amber-500">
+                  <option value="kg" selected>kg</option>
+                  <option value="g">g</option>
+                  <option value="lb">lb</option>
+                  <option value="oz">oz</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="p-3 bg-stone-50 dark:bg-stone-950/60 rounded-xl border border-stone-200/80 dark:border-stone-800 flex items-center justify-between gap-2">
+              <span class="text-xs font-medium text-stone-500 dark:text-stone-400">Estimated Length</span>
+              <div class="flex items-center gap-2">
+                <span id="weightQueryLength" class="text-sm sm:text-base font-mono font-bold text-stone-900 dark:text-white">—</span>
+                <select id="weightQueryLengthUnit" class="h-8 px-1.5 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg text-xs font-semibold text-stone-700 dark:text-stone-300 outline-none cursor-pointer focus:ring-1 focus:ring-amber-500">
+                  <option value="mm">mm</option>
+                  <option value="cm">cm</option>
+                  <option value="m">m</option>
+                  <option value="inch">inch</option>
+                  <option value="ft" selected>ft</option>
+                  <option value="yd">yd</option>
+                </select>
+              </div>
+            </div>
+            <p id="weightQueryNote" class="text-[11px] text-stone-500 dark:text-stone-400">Uses the weight-per-length rate above.</p>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- RIGHT PANE: Interactive Canvas Visualizer -->
+    <div class="lg:col-span-7 space-y-4 sm:space-y-6">
+
+      <!-- Canvas Card -->
+      <section class="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200/90 dark:border-stone-800/90 shadow-card overflow-hidden flex flex-col">
+
+        <div class="p-3.5 sm:p-5 border-b border-stone-100 dark:border-stone-800/80 bg-stone-50/50 dark:bg-stone-900/50 flex flex-wrap items-center justify-between gap-2 sm:gap-3">
+          <div class="flex items-center gap-2 min-w-0">
+            <div class="w-7 h-7 rounded-lg bg-violet-500/10 text-violet-600 dark:text-violet-400 flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+            </div>
+            <div class="min-w-0">
+              <h2 class="text-sm font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 leading-tight truncate">Mesh Blueprint</h2>
+              <span class="text-[11px] text-stone-400 hidden sm:inline">Physical diamond perspective</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <div class="flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg shadow-subtle">
+              <label for="netColor" class="text-xs font-semibold text-stone-600 dark:text-stone-400">Mesh</label>
+              <input id="netColor" type="color" value="#14b8a6" class="w-6 h-6 cursor-pointer bg-transparent">
+            </div>
+
+            <div class="flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg shadow-subtle">
+              <label for="textColor" class="text-xs font-semibold text-stone-600 dark:text-stone-400">Label</label>
+              <input id="textColor" type="color" value="#94a3b8" class="w-6 h-6 cursor-pointer bg-transparent">
+            </div>
+          </div>
+        </div>
+
+        <div class="px-3.5 sm:px-5 pt-3.5 sm:pt-4 flex flex-wrap items-center justify-between gap-2">
+          <div class="grid grid-cols-2 p-1 bg-stone-200/70 dark:bg-stone-800 rounded-xl gap-1 w-full sm:w-auto">
+            <button id="btnViewPattern" type="button" class="min-h-[40px] px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-white dark:bg-stone-900 shadow-sm text-teal-600 dark:text-teal-400 transition-all flex items-center justify-center gap-1.5">
+              <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+              <span>Pattern</span>
+            </button>
+            <button id="btnViewSingle" type="button" class="min-h-[40px] px-4 py-2 text-xs sm:text-sm font-medium rounded-lg text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 transition-all flex items-center justify-center gap-1.5">
+              <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4l8 8-8 8-8-8z"></path></svg>
+              <span>Drag to Reshape</span>
+            </button>
+          </div>
+          <button id="btnResetStretch" type="button" title="Reset mesh shape to default" class="flex items-center gap-1.5 h-9 px-3 text-xs font-semibold rounded-lg bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-600 dark:text-stone-400 border border-stone-200 dark:border-stone-700 transition-all active:scale-95 flex-shrink-0">
+            <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            <span class="hidden sm:inline">Reset Shape</span>
+          </button>
+        </div>
+
+        <div class="p-3.5 sm:p-5 flex-1 flex flex-col">
+          <div class="relative w-full h-72 sm:h-[420px] lg:h-[560px] bg-[#090d16] rounded-xl border border-stone-800 overflow-hidden shadow-inner flex items-center justify-center">
+
+            <div class="absolute top-3 left-3 z-10 pointer-events-none flex items-center gap-2">
+              <span id="canvasHint" class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-stone-900/80 backdrop-blur border border-stone-700 text-stone-300 transition-opacity duration-150">
+                Auto Scale: Fit
+              </span>
+            </div>
+
+            <canvas id="mesh" class="absolute inset-0 w-full h-full"></canvas>
+          </div>
+
+          <div class="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-stone-500 dark:text-stone-400">
+            <div class="flex items-center gap-3">
+              <span class="inline-flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-teal-500"></span>
+                Vertical <span id="legendV" class="font-mono font-semibold text-stone-700 dark:text-stone-300">70%</span>
+              </span>
+              <span id="legendHWrap" class="inline-flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-violet-500"></span>
+                Horizontal <span id="legendH" class="font-mono font-semibold text-stone-700 dark:text-stone-300">—</span>
+              </span>
+            </div>
+            <span class="font-mono text-[11px] text-stone-400">1:1 Orthogonal</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Mathematics Formula Card -->
+      <section id="mathCardSection" class="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200/90 dark:border-stone-800/90 shadow-card p-4 sm:p-5">
+        <div class="flex items-center gap-2 mb-3">
+          <svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300">How the sizes are calculated</h3>
+        </div>
+        <div id="mathText" class="bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800/80 rounded-xl p-4 text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed overflow-x-auto">
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <footer id="appFooter" class="pt-2 pb-6 border-t border-stone-200/60 dark:border-stone-800/60 text-center text-xs text-stone-500 dark:text-stone-500 flex flex-col sm:flex-row items-center justify-between gap-2">
+    <div>Net Calculator v1.4.1 • Industrial Diamond Mesh Engine</div>
+    <div class="hidden sm:flex items-center gap-4">
+      <span>Auto-save Snapshot History</span>
+      <span>•</span>
+      <span>High Precision Mode</span>
+    </div>
+  </footer>
+
+</div>
+
+<!-- Sticky mobile results bar -->
+<div id="mobileStickyBar" class="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 dark:bg-stone-900/95 backdrop-blur-md border-t border-stone-200 dark:border-stone-800 shadow-[0_-4px_12px_rgba(0,0,0,0.06)] transition-all duration-300 transform translate-y-0 opacity-100 will-change-transform">
+  <div class="max-w-7xl mx-auto px-3 py-2.5 grid grid-cols-2 gap-3">
+    <div class="min-w-0">
+      <div id="mobileVLabel" class="text-[10px] font-bold text-teal-600 dark:text-teal-400 uppercase tracking-wider truncate">Vertical Dimension</div>
+      <div id="mobileVertical" class="text-base font-mono font-extrabold text-stone-900 dark:text-white truncate">—</div>
+    </div>
+    <div class="min-w-0 text-right">
+      <div id="mobileHLabel" class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider truncate">Horizontal Dimension</div>
+      <div id="mobileHorizontal" class="text-base font-mono font-extrabold text-stone-900 dark:text-white truncate">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- History Drawer Modal -->
+<div id="historyModalOverlay" class="hidden fixed inset-0 z-50 bg-stone-950/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity">
+  <div class="bg-white dark:bg-stone-900 w-full max-w-xl max-h-[90vh] sm:max-h-[85vh] rounded-t-3xl sm:rounded-3xl border border-stone-200 dark:border-stone-800 shadow-float flex flex-col overflow-hidden">
+    
+    <!-- Modal Header -->
+    <div class="p-4 sm:p-5 border-b border-stone-200 dark:border-stone-800 bg-stone-50/80 dark:bg-stone-950/60 flex items-center justify-between gap-3 flex-shrink-0">
+      <div class="flex items-center gap-2.5">
+        <span class="w-9 h-9 rounded-xl bg-teal-600 text-white flex items-center justify-center shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </span>
+        <div>
+          <h2 class="text-base font-bold text-stone-900 dark:text-white flex items-center gap-2">
+            Calculation History
+            <span id="historyCountBadge" class="text-xs font-mono font-semibold px-2 py-0.5 rounded-full bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300">0</span>
+          </h2>
+          <p class="text-xs text-stone-500 dark:text-stone-400">Restore or export previous net calculations.</p>
+        </div>
+      </div>
+      <button id="btnHistoryClose" type="button" aria-label="Close" class="w-9 h-9 flex items-center justify-center rounded-xl text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Modal Content: List of History Items -->
+    <div id="historyListContainer" class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3">
+      <!-- Dynamically filled with history cards -->
+    </div>
+
+    <!-- History Actions Toolbar (Export, Import, Clear) -->
+    <div class="p-3.5 sm:p-4 border-t border-stone-200 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-950/50 flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
+      <div class="flex items-center gap-2">
+        <button id="btnExportHistory" type="button" title="Download history backup as JSON" class="flex items-center gap-1.5 h-8 px-2.5 text-xs font-semibold rounded-lg bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 hover:bg-stone-100 text-stone-700 dark:text-stone-200 transition-all">
+          <svg class="w-3.5 h-3.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          <span>Export JSON</span>
+        </button>
+        <label for="importHistoryInput" title="Import history JSON file" class="flex items-center gap-1.5 h-8 px-2.5 text-xs font-semibold rounded-lg bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 hover:bg-stone-100 text-stone-700 dark:text-stone-200 cursor-pointer transition-all">
+          <svg class="w-3.5 h-3.5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l4-4m0 0l4 4m-4-4v12"></path></svg>
+          <span>Import</span>
+          <input id="importHistoryInput" type="file" accept=".json" class="hidden">
+        </label>
+      </div>
+
+      <button id="btnClearHistory" type="button" class="h-8 px-2.5 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors">
+        Clear All
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Batch & Export Action Drawer -->
+<div id="actionDrawerOverlay" class="hidden fixed inset-0 z-50 bg-stone-950/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity">
+  <div class="bg-white dark:bg-stone-900 w-full max-w-md rounded-t-3xl sm:rounded-3xl border border-stone-200 dark:border-stone-800 shadow-float overflow-hidden p-5 sm:p-6 space-y-4">
+    
+    <!-- Drawer Header -->
+    <div class="flex items-start justify-between gap-3">
+      <div>
+        <h3 class="text-base font-bold text-stone-900 dark:text-white">Batch &amp; Export Net</h3>
+        <p class="text-xs text-stone-500 dark:text-stone-400">Save this calculation to your order list or export a spec sheet.</p>
+      </div>
+      <button id="btnActionDrawerClose" type="button" aria-label="Close" class="w-8 h-8 flex items-center justify-center rounded-xl text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Active Cut Snapshot -->
+    <div class="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-950 border border-stone-200/90 dark:border-stone-800/90 space-y-2">
+      <div class="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 flex items-center justify-between">
+        <span>Current Net Snapshot</span>
+        <span id="drawerSnapshotMode" class="text-teal-600 dark:text-teal-400 font-mono">Dimensions</span>
+      </div>
+      <div class="grid grid-cols-2 gap-3 text-center pt-1">
+        <div class="p-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-200/60 dark:border-stone-800">
+          <div class="text-[10px] text-stone-400">Vertical</div>
+          <div id="drawerSnapshotV" class="text-base font-mono font-extrabold text-teal-600 dark:text-teal-400 truncate">—</div>
+        </div>
+        <div class="p-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-200/60 dark:border-stone-800">
+          <div class="text-[10px] text-stone-400">Horizontal</div>
+          <div id="drawerSnapshotH" class="text-base font-mono font-extrabold text-emerald-600 dark:text-emerald-400 truncate">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions Stack -->
+    <div class="space-y-2.5 pt-1">
+      <button id="btnDrawerSaveItem" type="button" class="w-full h-12 flex items-center justify-center gap-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm transition-all shadow-sm active:scale-95">
+        <svg class="w-4 h-4 fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        <span>+ Add to Order Batch</span>
+        <span id="drawerBatchBadge" class="ml-1 text-[11px] font-mono bg-teal-800/70 px-2 py-0.5 rounded-full">0 saved</span>
+      </button>
+
+      <button id="btnDrawerSaveHistory" type="button" class="w-full h-11 flex items-center justify-center gap-2 rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 font-semibold text-sm transition-all shadow-sm active:scale-95">
+        <svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+        <span>Log Snapshot to History</span>
+      </button>
+
+      <button id="btnDrawerOpenReport" type="button" class="w-full h-11 flex items-center justify-center gap-2 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-semibold text-sm transition-all shadow-sm active:scale-95">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17h6m-6-4h6m-7 8h8a2 2 0 002-2V7.5L14.5 3H6a2 2 0 00-2 2v14a2 2 0 002 2z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 3v4.5H18.5"></path></svg>
+        <span>View &amp; Export Specification</span>
+      </button>
+    </div>
+
+    <button id="btnDrawerDone" type="button" class="w-full py-2 text-xs font-semibold text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200">
+      Close &amp; Keep Editing
+    </button>
+  </div>
+</div>
+
+<!-- Export / Specification Modal -->
+<div id="reportOverlay" class="hidden fixed inset-0 z-50 bg-stone-950/60 backdrop-blur-sm flex items-start sm:items-center justify-center p-3 sm:p-6 overflow-y-auto">
+  <div id="reportCard" class="bg-white dark:bg-stone-900 rounded-3xl shadow-float border border-stone-200 dark:border-stone-800 w-full max-w-3xl my-4 overflow-hidden">
+    <div id="reportToolbar" class="p-4 sm:p-5 border-b border-stone-200 dark:border-stone-800 bg-stone-50/80 dark:bg-stone-950/60">
+      <div class="flex items-start justify-between gap-3">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="w-9 h-9 rounded-xl bg-violet-600 text-white flex items-center justify-center shadow-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2"/></svg>
+            </span>
+            <div>
+              <h2 class="text-base sm:text-lg font-bold tracking-tight text-stone-900 dark:text-white">Export specification</h2>
+              <p class="text-[11px] sm:text-xs text-stone-500 dark:text-stone-400">Review the calculated net before sharing or printing.</p>
+            </div>
+          </div>
+        </div>
+        <button id="btnReportClose" type="button" aria-label="Close export" class="flex-shrink-0 w-9 h-9 rounded-xl text-stone-500 hover:bg-white dark:hover:bg-stone-800 border border-transparent hover:border-stone-200 dark:hover:border-stone-700 transition-all">
+          <svg class="w-4 h-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 mt-4">
+        <button id="btnReportCopy" type="button" class="flex items-center gap-1.5 h-9 px-3 text-xs font-semibold rounded-xl bg-white dark:bg-stone-900 text-stone-700 dark:text-stone-200 border border-stone-200 dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-800 transition-all"><span id="btnReportCopyLabel">Copy summary</span></button>
+        <button id="btnReportCSV" type="button" class="flex items-center gap-1.5 h-9 px-3 text-xs font-semibold rounded-xl bg-white dark:bg-stone-900 text-stone-700 dark:text-stone-200 border border-stone-200 dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-800 transition-all">Download CSV</button>
+        <button id="btnReportPrint" type="button" class="flex items-center gap-1.5 h-9 px-3 text-xs font-semibold rounded-xl bg-teal-600 hover:bg-teal-700 text-white transition-all shadow-sm">Print / Save PDF</button>
+      </div>
+    </div>
+
+    <div id="reportBody" class="p-4 sm:p-6 space-y-5">
+      <div class="grid sm:grid-cols-[1fr_auto] gap-3 items-end">
+        <div>
+          <label for="reportJobName" class="block text-[10px] font-bold text-stone-500 dark:text-stone-400 mb-1.5 uppercase tracking-wider">Job / customer</label>
+          <input id="reportJobName" type="text" placeholder="Enter job name, customer, PO, etc." class="w-full h-11 px-3 bg-stone-50 dark:bg-stone-950 border border-stone-300 dark:border-stone-700 rounded-xl text-sm font-medium outline-none focus:ring-2 focus:ring-teal-500 dark:text-white">
+          <p id="reportPrintOnlyJobName" class="hidden text-base font-semibold"></p>
+        </div>
+        <div class="px-3 py-2 rounded-xl bg-stone-100 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-[11px] text-stone-500 dark:text-stone-400" id="reportTimestamp">—</div>
+      </div>
+
+      <div id="reportItemsContainer" class="space-y-4"></div>
+
+      <div class="flex items-start gap-2.5 p-3 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200/70 dark:border-amber-900/60 text-[11px] text-amber-800 dark:text-amber-300">
+        <span class="font-bold">Note:</span><span>Verify critical dimensions and material assumptions against the physical net before fabrication.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Notification Toast -->
+<div id="appToast" class="fixed bottom-6 right-6 z-50 transform translate-y-16 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2 px-4 py-2.5 rounded-xl bg-stone-900 text-white shadow-xl text-xs font-medium border border-stone-700">
+  <svg class="w-4 h-4 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+  <span id="toastMsg">Calculation saved</span>
+</div>
+
+
+<script type="module" src="js/app.js"></script>
 </body>
 </html>
